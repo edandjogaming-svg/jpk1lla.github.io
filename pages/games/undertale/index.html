@@ -363,6 +363,45 @@ canvas.emscripten {
       <div id="messages">
       </div>
     </div>
+
+	<script>
+const canvas = document.getElementById("canvas");
+
+// Ask for pointer lock when the user clicks the canvas
+canvas.addEventListener("click", () => {
+  canvas.requestPointerLock = canvas.requestPointerLock ||
+                              canvas.mozRequestPointerLock ||
+                              canvas.webkitRequestPointerLock;
+  canvas.requestPointerLock();
+});
+
+// Handle pointer lock change events
+document.addEventListener("pointerlockchange", lockChangeAlert, false);
+document.addEventListener("mozpointerlockchange", lockChangeAlert, false);
+document.addEventListener("webkitpointerlockchange", lockChangeAlert, false);
+
+function lockChangeAlert() {
+  if (document.pointerLockElement === canvas ||
+      document.mozPointerLockElement === canvas ||
+      document.webkitPointerLockElement === canvas) {
+    console.log("Pointer locked");
+    document.addEventListener("mousemove", updatePosition, false);
+  } else {
+    console.log("Pointer unlocked");
+    document.removeEventListener("mousemove", updatePosition, false);
+  }
+}
+
+function updatePosition(e) {
+  // These give how much the mouse moved since last event
+  const movementX = e.movementX || e.mozMovementX || e.webkitMovementX || 0;
+  const movementY = e.movementY || e.mozMovementY || e.webkitMovementY || 0;
+
+  // Example: log movement or pass it to your game
+  // console.log("Moved", movementX, movementY);
+}
+</script>
+
     <script>
       function mergeFiles(fileParts) {
           return new Promise((resolve, reject) => {
