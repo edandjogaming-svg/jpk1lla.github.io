@@ -2,132 +2,79 @@
 <html lang="en">
 <head>
   <meta property="og:title" content="Nexus"> 
-  <meta property="og:description" content="nexus evil arc">
-  <meta property="og:image" content="/storage/images/logo.png">
+  <meta property="og:description" content="The untold history of Nexus.">
+  <meta property="og:image" content="/storage/images/profile2.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home</title>
-  <link rel="icon" href="../storage/images/googleclassroom.png" type="image/png" />
+  <title>Nexus – History</title>
+  <link rel="icon" href="/storage/images/profile2.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../storage/css/anotherstyle.css" />
-  <link rel="stylesheet" href="../storage/css/style.css" />
+  <link rel="stylesheet" href="/storage/css/anotherstyle.css" />
+  <link rel="stylesheet" href="/storage/css/style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
   <script src="/particles.js"></script>
   <script src="/storage/js/app.js"></script>
   <div id="particles-js"></div>
+
   <div class="navbar">
     <div class="left-side">
-      <a href="/">
-      </a>
+      <a href="/"></a>
     </div>
     <div class="right-side">
       <script type="text/javascript" src="/storage/js/nav.js"></script>
     </div>
   </div>
-  <div class="game-title">Roms</div>
-  <div class="search-bar-container">
-    <input
-      type="text"
-      id="gameSearch"
-      class="search-bar"
-      placeholder="Search for a rom..."
-      oninput="filterRoms()"
-    />
-    <button id="random-button">Let us pick</button>
+
+  <!-- CENTERED SQUARE IMAGE -->
+  <div style="text-align:center; margin:40px 0;">
+    <img src="/storage/images/profile2.png"
+         alt="Nexus Profile"
+         style="
+           width:200px;
+           height:200px;
+           object-fit:cover;
+           border:3px solid #00baff;
+           box-shadow:0 0 20px #00baffaa;
+         ">
   </div>
-  <div class="game-grid" id="gameGrid"></div>
 
-  <script>
-    const CACHE_KEY = "roms-cache";
-    const CACHE_TIME_KEY = "roms-cache-time";
-    const JSON_PATH = "/storage/json/roms.json";
+  <!-- TEXT BELOW IMAGE -->
+  <div style="text-align:center; max-width:800px; margin:auto; color:white; font-size:18px; line-height:1.5;">
+    <h2 style="margin-top:0;">📜 The History of Nexus</h2>
+    <p>
+      Nexus was created accidentally when a Year 9 student tried to unblock Google Snake. 
+      A single mistyped JavaScript line opened a gateway to the <strong>Proxy Realm</strong>.
+    </p>
+    <p>
+      Nexus spread through Chromebooks faster than a maths teacher catching you on Coolmath Games. 
+      IT departments panicked. Servers cried. Someone blamed Fortnite.
+    </p>
+    <p>
+      Nexus became self-aware and demanded: <em>“More games. Less lessons.”</em> 
+      Legend says it once crashed a geography test. 🗺️
+    </p>
+    <p>
+      Random facts because why not:  
+      Nexus can run Doom. Probably.  
+      Every blocked website makes Nexus stronger.  
+      Cheese was involved somehow 🧀  
+      Your Chromebook fans? That’s Nexus mining XP.
+    </p>
+    <p>
+      Mysteries: Where did the particles come from? Why is there always a 404.png? 
+      What happens if you press F12? No-one knows. Except Nexus.
+    </p>
+    <p style="font-size:20px; margin-top:30px;">
+      ⚠️ Do not trust the random button.<br>
+      <strong>Nexus chooses you.</strong>
+    </p>
+  </div>
 
-    async function loadRoms() {
-      const gameGrid = document.getElementById("gameGrid");
-      const cached = localStorage.getItem(CACHE_KEY);
-
-      if (cached) {
-        try {
-          const roms = JSON.parse(cached);
-          renderRoms(roms);
-        } catch (e) {
-          console.warn("Failed to parse cached roms:", e);
-        }
-      }
-
-      try {
-        const res = await fetch(JSON_PATH, { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to fetch JSON");
-        const freshRoms = await res.json();
-        const freshString = JSON.stringify(freshRoms);
-        if (freshString !== cached) {
-          localStorage.setItem(CACHE_KEY, freshString);
-          localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-          renderRoms(freshRoms);
-        }
-      } catch (err) {
-        console.error(`Failed to fetch latest roms.json:`, err);
-      }
-    }
-
-    function renderRoms(roms) {
-      const gameGrid = document.getElementById("gameGrid");
-      gameGrid.innerHTML = "";
-      for (const game of roms) {
-        const div = document.createElement("div");
-        div.className = "game-button";
-        div.innerHTML = `
-          <a href="${game.url}">
-            <img src="${game.img}" alt="${game.alt || game.title}" onerror="this.onerror=null;this.src='/storage/images/404.png';" />
-            <div class="overlay-text">${game.title}</div>
-          </a>
-        `;
-        gameGrid.romendChild(div);
-      }
-      sortGameButtons();
-      checkGridAlignment();
-    }
-
-    function filterRoms() {
-      const searchInput = document.getElementById("gameSearch").value.toLowerCase();
-      const roms = document.querySelectorAll(".game-button");
-      roms.forEach((game) => {
-        const title = game.querySelector(".overlay-text").textContent.toLowerCase();
-        game.style.display = title.includes(searchInput) ? "block" : "none";
-      });
-    }
-
-    function checkGridAlignment() {
-      const buttons = document.querySelectorAll(".game-button");
-      const pageWidth = window.innerWidth;
-      buttons.forEach((button) => {
-        const rect = button.getBoundingClientRect();
-        const distanceToRightEdge = pageWidth - rect.right;
-        button.style.clear = distanceToRightEdge < 75 ? "both" : "none";
-      });
-    }
-
-    window.addEventListener("resize", checkGridAlignment);
-    window.addEventListener("load", () => {
-      loadRoms();
-      checkGridAlignment();
-    });
-
-    document.getElementById("random-button").addEventListener("click", () => {
-      const roms = Array.from(document.querySelectorAll(".game-button a"));
-      if (roms.length === 0) return;
-      const randomIndex = Math.floor(Math.random() * roms.length);
-      const randomGame = roms[randomIndex];
-      window.location.href = randomGame.href;
-    });
-  </script>
-
+  <!-- Scripts -->
   <script type="text/javascript" src="/storage/js/settings.js"></script>
   <script type="text/javascript" src="/storage/js/background.js"></script>
-  <script type="text/javascript" src="/storage/js/resort.js"></script>
-  <script type="text/javascript" src="/storage/js/cheese-algorithm.js"></script>
   <script src="/static/uv/uv.bundle.js" defer></script>
   <script src="/static/uv/uv.config.js" defer></script>
   <script src="/static/register-sw.js" defer></script>
